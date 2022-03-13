@@ -1,0 +1,6 @@
+<div *ngFor="let user of userList">
+  <mat-card>{{user.email}}
+    <button style="float: right;" mat-button [routerLink]="['../','profile',user._id]">Edit</button>
+    <div style="clear: both;"></div>
+  </mat-card>
+</div>
