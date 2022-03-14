@@ -21,6 +21,10 @@ export class ApiserviceService {
     return this.httpClient.post(`${this.baseUrl}/${url}`, data)
   }
 
+  put(url: string, data: any) {
+    return this.httpClient.put(`${this.baseUrl}/${url}`, data)
+  }
+
   setToken(token: any) {
     localStorage.setItem('token', token)
   }
@@ -32,4 +36,5 @@ export class ApiserviceService {
   get isAuthenticated() {
     return !!this.getToken('token')
   }
+
 }

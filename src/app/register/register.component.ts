@@ -13,6 +13,8 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   loading = false;
   submitted = false;
+  PAT_EMAIL = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+[.][a-zA-Z]{2,4}$";
+  PAT_NAME = "^[a-zA-Z ]{2,20}$";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,11 +26,15 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.pattern(this.PAT_EMAIL)]],
+      firstName: ['', [Validators.required, Validators.pattern(this.PAT_NAME)]],
+      lastName: ['', [Validators.required, Validators.pattern(this.PAT_NAME)]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+
+    this.registerForm.valueChanges.subscribe((value) => {
+      console.log(this.registerForm)
+    })
   }
 
   // convenience getter for easy access to form fields

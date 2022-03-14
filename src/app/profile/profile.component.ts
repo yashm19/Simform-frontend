@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiserviceService } from '../apiservice.service';
 
 
@@ -11,10 +11,13 @@ import { ApiserviceService } from '../apiservice.service';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private apiService: ApiserviceService,
+  constructor(private apiService: ApiserviceService,private router:Router,
     private route: ActivatedRoute, private formBuilder: FormBuilder) {
 
   }
+
+  PAT_EMAIL = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+[.][a-zA-Z]{2,4}$";
+  PAT_NAME = "^[a-zA-Z ]{2,20}$";
 
   ngOnInit(): void {
     this.resetForm()
@@ -26,9 +29,9 @@ export class ProfileComponent implements OnInit {
   userProfileForm!: FormGroup
   resetForm() {
     this.userProfileForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.pattern(this.PAT_EMAIL)]],
+      firstName: ['', [Validators.required, Validators.pattern(this.PAT_NAME)]],
+      lastName: ['', [Validators.required, Validators.pattern(this.PAT_NAME)]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
@@ -50,7 +53,9 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit(){
-    console.log(this.userProfileForm.value)
+    this.apiService.put(`profile/${this.route.snapshot.params['id']}`,this.userProfileForm.value).subscribe((data:any)=>{
+      this.router.navigateByUrl('users')
+    })
   }
 
 }

@@ -14,6 +14,9 @@ export class LoginComponent implements OnInit {
   loading = false;
   submitted = false;
   returnUrl: string | undefined;
+  showErrorMsg: boolean = false
+  errorMessage: string = ''
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,13 +27,11 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.showErrorMsg = false
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
     });
-
-    // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   // convenience getter for easy access to form fields
@@ -43,6 +44,9 @@ export class LoginComponent implements OnInit {
       console.log(data)
       this.apiService.setToken(data.token)
       this.router.navigateByUrl('users')
+    }, (error) => {
+      this.showErrorMsg = true
+      this.errorMessage = error?.error?.message
     })
   }
 }
